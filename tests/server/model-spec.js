@@ -12,6 +12,16 @@ describe('Model', function () {
 			expect(instance._id).toEqual('an id');
 			expect(instance.id).toEqual('an id');
 		});
+
+		it('sets _changedAttributes to _attributes if the document is not yet persisted', function () {
+			var instance = new TestModel({foo: 'bar'});
+			expect(instance._changedAttributes).toEqual({foo: 'bar'});
+		});
+
+		it ('sets _changedAttributes to {} if the document is persisted', function () {
+			var instance = new TestModel({_id: 'foo', bar: 'baz'});
+			expect(instance._changedAttributes).toEqual({});
+		});
 	});
 
 	describe('static functions', function () {
@@ -75,6 +85,26 @@ describe('Model', function () {
 			expect(instance.isPersisted()).toBe(true);
 			instance = new TestModel({name: 'is set'});
 			expect(instance.isPersisted()).toBe(false);
+		});
+	});
+
+	describe('hasChanged', function () {
+		describe('without arguments', function () {
+			it ('returns true if and only if _changedAttributes is not empty', function () {
+				var instance = new TestModel();
+				instance._changedAttributes = {name: 'test'};
+				expect(instance.hasChanged()).toBe(true);
+				instance._changedAttributes = {};
+				expect(instance.hasChanged()).toBe(false);
+			});
+		});
+		describe('with key as argument', function () {
+			it ('returns true if and only if _changedAttributes has that key', function () {
+				var instance = new TestModel();
+				instance._changedAttributes = {something: false};
+				expect(instance.hasChanged('something')).toBe(true);
+				expect(instance.hasChanged('something else')).toBe(false);
+			});
 		});
 	});
 });
