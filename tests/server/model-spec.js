@@ -261,4 +261,18 @@ describe('Model', function () {
 			);
 		});
 	});
+
+	describe('destroy', function () {
+		it ('removes the document from the collection', function () {
+			var instance = TestModel.create();
+			instance.destroy();
+			expect(TestModel.collection.find().count()).toEqual(0);
+		});
+
+		it ('unsets its _id attributes', function () {
+			var instance = TestModel.create();
+			instance.destroy();
+			expect(instance._id).toBeUndefined();
+		});
+	});
 });
