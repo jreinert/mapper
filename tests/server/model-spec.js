@@ -139,6 +139,19 @@ describe('Model', function () {
 		});
 	});
 
+	describe('getAttributes', function () {
+		it ('returns all currently set attributes', function () {
+			var instance = new TestModel({test: 'green', foo: 'bar'});
+			expect(instance.getAttributes()).toEqual({test: 'green', foo: 'bar'});
+		});
+
+		it ('merges persisted and changed attributes', function () {
+			var instance = TestModel.create({test: 'green'});
+			instance.set('foo', 'bar');
+			expect(instance.getAttributes()).toEqual({test: 'green', foo: 'bar'});
+		});
+	});
+
 	describe('setAttributes', function () {
 		it ('adds given key value pairs to _changedAttributes', function () {
 			var instance = new TestModel({test: 'red'});
