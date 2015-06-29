@@ -33,5 +33,25 @@ describe('Model', function () {
 				expect(TestModel.where).toHaveBeenCalledWith({}, options);
 			});
 		});
+
+		describe('find', function () {
+			it('returns a single model instance for the given id', function () {
+				var id = TestModel.collection.insert({name: 'test'});
+				var instance = TestModel.find(id);
+				expect(instance._attributes).toBeDefined();
+				expect(instance._attributes.name).toEqual('test');
+			});
+
+			it('returns undefined if no document is found', function () {
+				var instance = TestModel.find({});
+				expect(instance).toBeUndefined();
+			});
+		});
+
+		describe('findBy', function () {
+			it('is an alias for find', function () {
+				expect(TestModel.findBy).toEqual(TestModel.find);
+			});
+		});
 	});
 });
