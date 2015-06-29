@@ -169,4 +169,52 @@ describe('Model', function () {
 			expect(instance.set('foo', 'bar')).toEqual('bar');
 		});
 	});
+
+	describe('push', function () {
+		it ('adds given values to an array attribute', function () {
+			var instance = new TestModel({fruit: ['apples']});
+			instance.push('fruit', 'oranges');
+			expect(instance._changedAttributes).toEqual({fruit: ['apples', 'oranges']});
+			instance.push('fruit', 'pears', 'pineapples');
+			expect(instance._changedAttributes).toEqual({
+				fruit: ['apples', 'oranges', 'pears', 'pineapples']
+			});
+		});
+
+		it ('returns the new length of the array attribute', function () {
+			var instance = new TestModel({fruit: ['apples']});
+			var result = instance.push('fruit', 'oranges');
+			expect(result).toEqual(2);
+		});
+
+		it ('creates an array attribute with the given value if not present', function () {
+			var instance = new TestModel();
+			instance.push('fruit', 'oranges');
+			expect(instance._changedAttributes).toEqual({fruit: ['oranges']});
+		});
+	});
+
+	describe('pull', function () {
+		it ('removes given values from an array attribute', function () {
+			var instance = new TestModel({
+				fruit: ['apples', 'apples', 'oranges', 'pears', 'pineapples']
+			});
+			instance.pull('fruit', 'apples');
+			expect(instance._changedAttributes).toEqual({
+				fruit: ['apples', 'oranges', 'pears', 'pineapples']
+			});
+			instance.pull('fruit', 'apples', 'oranges');
+			expect(instance._changedAttributes).toEqual({
+				fruit: ['pears', 'pineapples']
+			});
+		});
+
+		it ('returns the actually removed elements', function () {
+			var instance = new TestModel({fruit: ['apples', 'oranges']});
+			var result = instance.pull('fruit', 'oranges', 'pineapples');
+			expect(result).toEqual(['oranges']);
+			result = instance.pull('fruit', 'apples');
+			expect(result).toEqual('apples');
+		});
+	});
 });
