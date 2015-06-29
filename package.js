@@ -8,4 +8,16 @@ Package.describe({
 
 Package.onUse(function(api) {
 	api.versionsFrom('1.1.0.2');
+	api.use('underscore');
+	api.addFiles('lib/helpers.js');
+	api.addFiles('lib/model.js');
+	api.export('Model');
+});
+
+Package.onTest(function(api) {
+	api.use('sanjo:jasmine@0.14.0');
+	api.use('jreinert:mapper');
+	api.use('mongo');
+	api.addFiles(['tests/test_model.js', 'tests/fixtures.js']);
+	api.addFiles('tests/server/model-spec.js', 'server');
 });
