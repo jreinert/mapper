@@ -1,7 +1,7 @@
 describe('Model', function () {
 	describe('constructor', function () {
-		it('stores all attributes from given document in _attributes', function () {
-			var instance = new TestModel({name: 'test', color: 'green'});
+		it('stores all attributes from a persisted document in _attributes', function () {
+			var instance = new TestModel({_id: 'foo', name: 'test', color: 'green'});
 			expect(instance._attributes).toBeDefined();
 			expect(instance._attributes.name).toEqual('test');
 			expect(instance._attributes.color).toEqual('green');
@@ -13,7 +13,7 @@ describe('Model', function () {
 			expect(instance.id).toEqual('an id');
 		});
 
-		it('sets _changedAttributes to _attributes if the document is not yet persisted', function () {
+		it('sets _changedAttributes to the given document if it is not yet persisted', function () {
 			var instance = new TestModel({foo: 'bar'});
 			expect(instance._changedAttributes).toEqual({foo: 'bar'});
 		});
@@ -21,6 +21,19 @@ describe('Model', function () {
 		it ('sets _changedAttributes to {} if the document is persisted', function () {
 			var instance = new TestModel({_id: 'foo', bar: 'baz'});
 			expect(instance._changedAttributes).toEqual({});
+		});
+
+		it ('stores defaults in _changedAttributes if _attributes does not have them', function () {
+			var ModelWithDefaults = TestModel.extend({
+				defaults: {
+					foo: 'bar',
+					test: 'green'
+				}
+			});
+			var instance = new ModelWithDefaults({foo: 'baz'});
+			expect(instance._changedAttributes).toEqual({foo: 'baz', test: 'green'});
+			instance = new ModelWithDefaults({_id: 'id', foo: 'baz'});
+			expect(instance._changedAttributes).toEqual({test: 'green'});
 		});
 	});
 
