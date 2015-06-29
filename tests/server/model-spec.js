@@ -120,4 +120,11 @@ describe('Model', function () {
 			});
 		});
 	});
+
+	describe('get', function () {
+		it ('returns the value for a given key from _attributes/_changedAttributes', function () {
+			var instance = new TestModel({test: 'green'});
+			expect(instance.get('test')).toEqual('green');
+		});
+	});
 });
