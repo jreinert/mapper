@@ -149,4 +149,24 @@ describe('Model', function () {
 			expect(result).toEqual({test: 'green', foo: 'bar'});
 		});
 	});
+
+	describe('set', function () {
+		it ('sets the given key value pair in _changedAttributes', function () {
+			var instance = new TestModel();
+			instance.set('foo', 'bar');
+			expect(instance._changedAttributes).toEqual({foo: 'bar'});
+		});
+
+		it ('delegates to setAttributes', function () {
+			var instance = new TestModel();
+			spyOn(instance, 'setAttributes');
+			instance.set('foo', 'bar');
+			expect(instance.setAttributes).toHaveBeenCalledWith({foo: 'bar'});
+		});	
+
+		it ('returns the set value', function () {
+			var instance = new TestModel();
+			expect(instance.set('foo', 'bar')).toEqual('bar');
+		});
+	});
 });
