@@ -90,6 +90,17 @@ describe('Model', function () {
 				expect(TestModel.findBy).toEqual(TestModel.find);
 			});
 		});
+
+		describe('create', function () {
+			it('creates a new model instance and persists it', function () {
+				var instance = TestModel.create({foo: 'bar', test: 'green'});
+				expect(TestModel.collection.findOne(instance.id)).toEqual(
+					jasmine.objectContaining({
+						foo: 'bar', test: 'green'
+					})
+				);
+			});
+		});
 	});
 
 	describe('isPersisted', function () {
