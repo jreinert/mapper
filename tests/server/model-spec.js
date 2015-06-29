@@ -53,6 +53,7 @@ describe('Model', function () {
 				var id = TestModel.collection.insert({name: 'test'});
 				var instance = TestModel.find(id);
 				expect(instance._attributes.name).toEqual('test');
+				expect(instance.id).toEqual(id);
 			});
 
 			it('returns undefined if no document is found', function () {
@@ -65,6 +66,15 @@ describe('Model', function () {
 			it('is an alias for find', function () {
 				expect(TestModel.findBy).toEqual(TestModel.find);
 			});
+		});
+	});
+
+	describe('isPersisted', function () {
+		it ('returns true if and only if _id is set', function () {
+			var instance = new TestModel({_id: 'is set'});
+			expect(instance.isPersisted()).toBe(true);
+			instance = new TestModel({name: 'is set'});
+			expect(instance.isPersisted()).toBe(false);
 		});
 	});
 });
