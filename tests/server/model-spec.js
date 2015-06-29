@@ -127,4 +127,26 @@ describe('Model', function () {
 			expect(instance.get('test')).toEqual('green');
 		});
 	});
+
+	describe('setAttributes', function () {
+		it ('adds given key value pairs to _changedAttributes', function () {
+			var instance = new TestModel({test: 'red'});
+			instance.setAttributes({test: 'green', foo: 'bar'});
+			expect(instance._changedAttributes).toEqual({test: 'green', foo: 'bar'});
+		});
+
+		it ('removes values from _changedAttributes that are changed back to persisted state', function () {
+			var instance = new TestModel({_id: 'id', test: 'red'});
+			instance.setAttributes({test: 'green', foo: 'bar'});
+			expect(instance._changedAttributes).toEqual({test: 'green', foo: 'bar'});
+			instance.setAttributes({test: 'red'});
+			expect(instance._changedAttributes).toEqual({foo: 'bar'});
+		});
+
+		it ('returns current attributes', function () {
+			var instance = new TestModel({_id: 'id', test: 'red'});
+			var result = instance.setAttributes({test: 'green', foo: 'bar'});
+			expect(result).toEqual({test: 'green', foo: 'bar'});
+		});
+	});
 });
