@@ -1,4 +1,8 @@
 describe('Model', function () {
+	beforeEach(function () {
+		TestModel.collection.remove({});
+	});
+
 	describe('constructor', function () {
 		it('stores all attributes from a persisted document in _attributes', function () {
 			var instance = new TestModel({_id: 'foo', name: 'test', color: 'green'});
@@ -38,10 +42,6 @@ describe('Model', function () {
 	});
 
 	describe('static functions', function () {
-		beforeEach(function () {
-			TestModel.collection.remove({});
-		});
-
 		describe('where', function () {
 			it('returns a cursor over documents maching the query', function () {
 				_.each(Fixtures.documents, TestModel.collection.insert, TestModel.collection);
@@ -215,6 +215,29 @@ describe('Model', function () {
 			expect(result).toEqual(['oranges']);
 			result = instance.pull('fruit', 'apples');
 			expect(result).toEqual('apples');
+		});
+	});
+
+	describe('save', function () {
+		it ('persists the changed attributes to the database', function () {
+			var instance = new TestModel({foo: 'bar', test: 'green'});
+			instance.save();
+			expect(TestModel.collection.findOne()).toEqual(jasmine.objectContaining({
+				foo: 'bar', test: 'green'
+			}));
+		});
+
+		it ('sets the _id attribute', function () {
+			var instance = new TestModel();
+			instance.save();
+			var id = TestModel.collection.findOne()._id;
+			expect(instance._id).toEqual(id);
+		});
+
+		it ('returns false if there is no changes to be saved, false otherwise', function () {
+			var instance = new TestModel();
+			expect(instance.save()).toBe(true);
+			expect(instance.save()).toBe(false);
 		});
 	});
 });
