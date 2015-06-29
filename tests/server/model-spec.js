@@ -31,7 +31,7 @@ describe('Model', function () {
 			var ModelWithDefaults = TestModel.extend({
 				defaults: {
 					foo: 'bar',
-					test: 'green'
+					test: function () { return 'green'; }
 				}
 			});
 			var instance = new ModelWithDefaults({foo: 'baz'});
