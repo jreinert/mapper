@@ -251,4 +251,14 @@ describe('Model', function () {
 			expect(instance.save()).toBe(false);
 		});
 	});
+
+	describe('updateAttributes', function () {
+		it ('sets attributes and persists changes', function () {
+			var instance = TestModel.create({foo: 'bar'});
+			instance.updateAttributes({foo: 'baz', test: 'green'});
+			expect(TestModel.collection.findOne(instance.id)).toEqual(
+				jasmine.objectContaining({foo: 'baz', test: 'green'})
+			);
+		});
+	});
 });
