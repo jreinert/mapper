@@ -10,8 +10,8 @@ Package.onUse(function(api) {
 	api.versionsFrom('1.1.0.2');
 	api.use('underscore');
 	api.addFiles('lib/helpers.js');
-	api.addFiles('lib/model.js');
-	api.export('Model');
+	api.addFiles('lib/mapper_model.js');
+	api.export('MapperModel');
 });
 
 Package.onTest(function(api) {
