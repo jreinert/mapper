@@ -1,4 +1,19 @@
 describe('Model', function () {
+	describe('constructor', function () {
+		it('stores all attributes from given document in _attributes', function () {
+			var instance = new TestModel({name: 'test', color: 'green'});
+			expect(instance._attributes).toBeDefined();
+			expect(instance._attributes.name).toEqual('test');
+			expect(instance._attributes.color).toEqual('green');
+		});
+
+		it('stores the _id property in id and _id', function () {
+			var instance = new TestModel({_id: 'an id'});
+			expect(instance._id).toEqual('an id');
+			expect(instance.id).toEqual('an id');
+		});
+	});
+
 	describe('static functions', function () {
 		beforeEach(function () {
 			TestModel.collection.remove({});
@@ -15,7 +30,6 @@ describe('Model', function () {
 			it('transforms the documents into model instances', function () {
 				TestModel.collection.insert({name: 'a test'});
 				var instance = TestModel.where({name: 'a test'}).fetch()[0];
-				expect(instance._attributes).toBeDefined();
 				expect(instance._attributes.name).toEqual('a test');
 			});
 		});
@@ -38,7 +52,6 @@ describe('Model', function () {
 			it('returns a single model instance for the given id', function () {
 				var id = TestModel.collection.insert({name: 'test'});
 				var instance = TestModel.find(id);
-				expect(instance._attributes).toBeDefined();
 				expect(instance._attributes.name).toEqual('test');
 			});
 
