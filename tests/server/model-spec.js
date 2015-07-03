@@ -194,6 +194,15 @@ describe('Model', function () {
 		});
 	});
 
+	describe('unset', function () {
+		it ('sets an attribute value to undefined', function () {
+			var instance = TestModel.create({foo: 'bar', test: 'green'});
+			instance.unset('foo');
+			expect(_.has(instance._changedAttributes, 'foo')).toBe(true);
+			expect(instance._changedAttributes.foo).toBeUndefined();
+		});
+	});
+
 	describe('push', function () {
 		it ('adds given values to an array attribute', function () {
 			var instance = new TestModel({fruit: ['apples']});
@@ -262,6 +271,14 @@ describe('Model', function () {
 			var instance = new TestModel();
 			expect(instance.save()).toBe(true);
 			expect(instance.save()).toBe(false);
+		});
+
+		it ('unsets undefined values in the database', function () {
+			var instance = TestModel.create({foo: 'bar', test: 'green'});
+			instance._changedAttributes.foo = undefined;
+			instance.save();
+			var doc = TestModel.collection.findOne(instance._id);
+			expect(doc).toEqual({test: 'green', _id: instance._id});
 		});
 	});
 
