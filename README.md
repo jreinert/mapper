@@ -16,7 +16,6 @@ An ODM (Object-Document Mapper) for Meteor.
 
 ## TODO
 
-- Validation
 - Coercion
 
 ## Model definition
@@ -27,6 +26,13 @@ MyModel = MapperModel.extend({
 	defaults: {
 		name: 'foo',
 		createdAt: function () { return new Date() }
+	},
+	validators: {
+		foo: function (errors, value) {
+			if (_.isUndefined(value) || _.isEmpty(value.trim()) {
+				errors.foo = "Can't be blank";
+			}
+		}
 	}
 });
 ```
@@ -50,7 +56,9 @@ MyModel = MapperModel.extend({
 var instance = new MyModel({foo: 'bar'});
 instance.isPersisted();
 // false
-instance.save();
+instance.save(); // validates the model and saves if valid
+// true
+instance.isValid();
 // true
 instance.isPersisted();
 // true
