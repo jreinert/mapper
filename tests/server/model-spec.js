@@ -280,6 +280,13 @@ describe('Model', function () {
 			var doc = TestModel.collection.findOne(instance._id);
 			expect(doc).toEqual({test: 'green', _id: instance._id});
 		});
+
+		it ('returns false and does not persist if the model is invalid', function () {
+			var instance = new TestModel({foo: 'bar', test: 'green'});
+			spyOn(instance, 'isValid').and.returnValue(false);
+			expect(instance.save()).toBe(false);
+			expect(instance.isPersisted()).toBe(false);
+		});
 	});
 
 	describe('updateAttributes', function () {
@@ -303,6 +310,33 @@ describe('Model', function () {
 			var instance = TestModel.create();
 			instance.destroy();
 			expect(instance._id).toBeUndefined();
+		});
+	});
+
+	describe('isValid', function () {
+		it ('calls all validators with an errors object and set argument', function () {
+			var ValidatingModel = TestModel.extend({
+				validators: jasmine.createSpyObj('validators', ['foo', 'bar', 'foobar'])
+			});
+			var instance = new ValidatingModel({foo: 'bar', bar: 'baz', foobar: 'foo'});
+			instance.isValid();
+			expect(ValidatingModel.validators.foo).toHaveBeenCalledWith({}, 'bar');
+			expect(ValidatingModel.validators.bar).toHaveBeenCalledWith({}, 'baz');
+			expect(ValidatingModel.validators.foobar).toHaveBeenCalledWith({}, 'foo');
+		});
+
+		it ('returns true if and only if errors is empty', function () {
+			var ValidatingModel = TestModel.extend({
+				validators: {
+					foo: function (errors, value) {
+						if (value === 'errorneus') errors.foo = 'An error';
+					}
+				}
+			});
+			var instance = new ValidatingModel({foo: 'errorneus'});
+			expect(instance.isValid()).toBe(false);
+			instance.set('foo', 'valid');
+			expect(instance.isValid()).toBe(true);
 		});
 	});
 });
