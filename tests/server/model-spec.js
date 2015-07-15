@@ -314,22 +314,19 @@ describe('Model', function () {
 	});
 
 	describe('isValid', function () {
-		it ('calls all validators with an errors object and set argument', function () {
-			var ValidatingModel = TestModel.extend({
-				validators: jasmine.createSpyObj('validators', ['foo', 'bar', 'foobar'])
-			});
-			var instance = new ValidatingModel({foo: 'bar', bar: 'baz', foobar: 'foo'});
+		it ('calls validate with itself', function () {
+			var ValidatingModel = TestModel.extend();
+			spyOn(ValidatingModel, 'validate');
+			var instance = new ValidatingModel({foo: 'bar'});
 			instance.isValid();
-			expect(ValidatingModel.validators.foo).toHaveBeenCalledWith({}, 'bar');
-			expect(ValidatingModel.validators.bar).toHaveBeenCalledWith({}, 'baz');
-			expect(ValidatingModel.validators.foobar).toHaveBeenCalledWith({}, 'foo');
+			expect(ValidatingModel.validate).toHaveBeenCalledWith(instance);
 		});
 
 		it ('returns true if and only if errors is empty', function () {
 			var ValidatingModel = TestModel.extend({
-				validators: {
-					foo: function (errors, value) {
-						if (value === 'errorneus') errors.foo = 'An error';
+				validate: function (model) {
+					if (model.get('foo') === 'errorneus') {
+						model.errors.foo = 'An error';
 					}
 				}
 			});
