@@ -12,7 +12,6 @@ An ODM (Object-Document Mapper) for Meteor.
 ## WIP
 
 - Relations (has many, belongs to, etc.)
-- Reactive getters in client
 
 ## TODO
 
