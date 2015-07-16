@@ -1,6 +1,6 @@
 Package.describe({
 	name: 'jreinert:mapper',
-	version: '0.0.7',
+	version: '0.0.8',
 	summary: 'An ODM (Object-Document Mapper) for Meteor',
 	git: 'https://github.com/jreinert/mapper.git',
 	documentation: 'README.md'
